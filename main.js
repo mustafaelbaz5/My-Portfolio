@@ -10,93 +10,162 @@ document.addEventListener('DOMContentLoaded', function () {
     initializeContactForm();
     initializeFloatingIcons();
     initializeSkillsScroll();
+
+    // Initialize particle background
+    initParticleBackground();
 });
 
-// ===== PARTICLES BACKGROUND =====
-const canvas = document.getElementById('bg-particles');
-const ctx = canvas.getContext('2d');
-let width = window.innerWidth;
-let height = window.innerHeight;
-let mouse = { x: width / 2, y: height / 2 };
-const POINTS = 60;
-const DIST = 120;
-const points = [];
+// ===== ENHANCED PARTICLES BACKGROUND =====
+function initParticleBackground() {
+    const canvas = document.getElementById('bg-particles');
+    if (!canvas) {
+        console.error('Canvas #bg-particles not found!');
+        return;
+    }
 
-function resizeCanvas() {
-    width = window.innerWidth;
-    height = window.innerHeight;
-    canvas.width = width;
-    canvas.height = height;
-}
-resizeCanvas();
-window.addEventListener('resize', resizeCanvas);
+    const ctx = canvas.getContext('2d');
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+    let mouse = { x: width / 2, y: height / 2 };
+    const POINTS = 80;
+    const DIST = 150;
+    const MOUSE_RADIUS = 200;
+    const points = [];
 
-for (let i = 0; i < POINTS; i++) {
-    points.push({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.7,
-        vy: (Math.random() - 0.5) * 0.7
-    });
-}
+    function resizeCanvas() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
 
-canvas.addEventListener('mousemove', e => {
-    mouse.x = e.clientX;
-    mouse.y = e.clientY;
-});
-
-function draw() {
-    ctx.clearRect(0, 0, width, height);
-    // Draw lines
+    // Initialize particles with varied sizes
     for (let i = 0; i < POINTS; i++) {
-        for (let j = i + 1; j < POINTS; j++) {
-            const dx = points[i].x - points[j].x;
-            const dy = points[i].y - points[j].y;
+        points.push({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            vx: (Math.random() - 0.5) * 0.5,
+            vy: (Math.random() - 0.5) * 0.5,
+            radius: Math.random() * 2 + 1
+        });
+    }
+
+    // Track mouse position
+    canvas.addEventListener('mousemove', e => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+    });
+
+    // Touch support for mobile
+    canvas.addEventListener('touchmove', e => {
+        if (e.touches.length > 0) {
+            mouse.x = e.touches[0].clientX;
+            mouse.y = e.touches[0].clientY;
+        }
+    }, { passive: true });
+
+    function update() {
+        // Update particle positions with physics
+        for (let i = 0; i < POINTS; i++) {
+            const p = points[i];
+
+            // Mouse attraction/repulsion
+            const dx = mouse.x - p.x;
+            const dy = mouse.y - p.y;
             const dist = Math.sqrt(dx * dx + dy * dy);
-            if (dist < DIST) {
-                ctx.strokeStyle = 'rgba(0,212,170,' + (1 - dist / DIST) * 0.5 + ')';
-                ctx.lineWidth = 1;
-                ctx.beginPath();
-                ctx.moveTo(points[i].x, points[i].y);
-                ctx.lineTo(points[j].x, points[j].y);
-                ctx.stroke();
+
+            if (dist < MOUSE_RADIUS && dist > 0) {
+                const force = (MOUSE_RADIUS - dist) / MOUSE_RADIUS;
+                p.vx += (dx / dist) * force * 0.2;
+                p.vy += (dy / dist) * force * 0.2;
+            }
+
+            // Apply velocity with damping
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vx *= 0.98;
+            p.vy *= 0.98;
+
+            // Bounce off edges
+            if (p.x < 0 || p.x > width) {
+                p.vx *= -1;
+                p.x = Math.max(0, Math.min(width, p.x));
+            }
+            if (p.y < 0 || p.y > height) {
+                p.vy *= -1;
+                p.y = Math.max(0, Math.min(height, p.y));
+            }
+
+            // Add subtle random movement
+            p.vx += (Math.random() - 0.5) * 0.05;
+            p.vy += (Math.random() - 0.5) * 0.05;
+
+            // Limit maximum velocity
+            const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+            if (speed > 2) {
+                p.vx = (p.vx / speed) * 2;
+                p.vy = (p.vy / speed) * 2;
             }
         }
     }
-    // Draw points
-    for (let i = 0; i < POINTS; i++) {
-        ctx.beginPath();
-        ctx.arc(points[i].x, points[i].y, 2.5, 0, Math.PI * 2);
-        ctx.fillStyle = '#00d4aa';
-        ctx.fill();
-    }
-}
 
-function update() {
-    for (let i = 0; i < POINTS; i++) {
-        // Move points
-        points[i].x += points[i].vx;
-        points[i].y += points[i].vy;
-        // Bounce from edges
-        if (points[i].x < 0 || points[i].x > width) points[i].vx *= -1;
-        if (points[i].y < 0 || points[i].y > height) points[i].vy *= -1;
-        // Mouse interaction
-        const dx = points[i].x - mouse.x;
-        const dy = points[i].y - mouse.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 100) {
-            points[i].x += dx / dist * 0.7;
-            points[i].y += dy / dist * 0.7;
+    function draw() {
+        ctx.clearRect(0, 0, width, height);
+
+        // Draw connections with gradient opacity
+        for (let i = 0; i < POINTS; i++) {
+            for (let j = i + 1; j < POINTS; j++) {
+                const dx = points[i].x - points[j].x;
+                const dy = points[i].y - points[j].y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+
+                if (dist < DIST) {
+                    const opacity = (1 - dist / DIST) * 0.5;
+                    ctx.strokeStyle = `rgba(0, 212, 170, ${opacity})`;
+                    ctx.lineWidth = 1.5;
+                    ctx.beginPath();
+                    ctx.moveTo(points[i].x, points[i].y);
+                    ctx.lineTo(points[j].x, points[j].y);
+                    ctx.stroke();
+                }
+            }
+        }
+
+        // Draw particles with glow effect
+        for (let i = 0; i < POINTS; i++) {
+            const p = points[i];
+
+            // Outer glow
+            const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius * 3);
+            gradient.addColorStop(0, 'rgba(0, 212, 170, 0.8)');
+            gradient.addColorStop(0.5, 'rgba(0, 212, 170, 0.3)');
+            gradient.addColorStop(1, 'rgba(0, 212, 170, 0)');
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius * 3, 0, Math.PI * 2);
+            ctx.fillStyle = gradient;
+            ctx.fill();
+
+            // Core particle
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fillStyle = '#00ffcc';
+            ctx.fill();
         }
     }
-}
 
-function animate() {
-    update();
-    draw();
-    requestAnimationFrame(animate);
+    function animate() {
+        update();
+        draw();
+        requestAnimationFrame(animate);
+    }
+
+    // Start animation
+    console.log('✅ Particle background initialized');
+    animate();
 }
-animate();
 
 // ===== NAVIGATION FUNCTIONALITY =====
 function initializeNavigation() {

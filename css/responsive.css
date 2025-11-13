@@ -196,18 +196,4 @@
   }
 }
 
-/* Accessibility - Reduced Motion */
-@media (prefers-reduced-motion: reduce) {
-  #hero-bg {
-    display: none !important;
-  }
 
-  /* Disable all animations for users who prefer reduced motion */
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
