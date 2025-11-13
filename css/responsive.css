@@ -1,4 +1,6 @@
 /* ===== RESPONSIVE DESIGN ===== */
+
+/* Large Tablets and Small Laptops (991px and below) */
 @media (max-width: 991px) {
   .hero__content {
     padding-right: 0;
@@ -31,16 +33,63 @@
   }
 }
 
+/* Tablets (768px and below) */
+@media (max-width: 768px) {
+  /* Skills Section */
+  .skill-card {
+    flex: 0 0 120px;
+    padding: 1rem 0.75rem;
+  }
+
+  .skills__track {
+    gap: 1rem;
+  }
+
+  .skill-card__icon {
+    font-size: 2rem;
+  }
+
+  .skill-card__title {
+    font-size: 0.9rem;
+  }
+
+  /* Project Cards */
+  .project-card__content {
+    padding: 1.5rem;
+  }
+
+  .project-card__title {
+    font-size: 1.2rem;
+  }
+
+  .project-card__description {
+    font-size: 0.9rem;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+  }
+
+  .project-card__buttons {
+    flex-direction: column;
+  }
+
+  .project-card__buttons .btn {
+    width: 100%;
+  }
+}
+
+/* Mobile Devices (767px and below) */
 @media (max-width: 767px) {
   :root {
     --section-padding: 60px 0;
   }
 
+  /* Navigation */
   .navbar__link {
     margin-left: 0;
     margin-bottom: 0.5rem;
   }
 
+  /* Hero Section */
   .hero__buttons {
     justify-content: center;
   }
@@ -52,6 +101,7 @@
   .hero__image-wrapper {
     width: 200px;
     height: 200px;
+    margin-bottom: 2.5rem;
   }
 
   .floating-icon {
@@ -60,6 +110,7 @@
     font-size: 1rem;
   }
 
+  /* Projects Section */
   .projects__filters {
     justify-content: center;
   }
@@ -73,20 +124,46 @@
     flex-direction: column;
   }
 
+  /* Contact Section */
   .contact__links {
     align-items: flex-start;
   }
 
+  /* Footer */
   .footer__social {
     justify-content: center;
   }
 
+  /* Skills Section */
   .skill-card {
     min-width: 120px;
   }
+
+  /* Scroll Progress Bar */
+  #scroll-progress-top {
+    height: 3px;
+  }
+
+  .scroll-progress-bar {
+    border-radius: 0 1.5px 1.5px 0;
+  }
 }
 
+/* Small Mobile Devices (576px and below) */
+@media (max-width: 576px) {
+  /* Project Card Images */
+  .project-card__image {
+    padding-top: 60%;
+  }
+
+  .project-card__content {
+    padding: 1.25rem;
+  }
+}
+
+/* Extra Small Mobile Devices (575px and below) */
 @media (max-width: 575px) {
+  /* Typography */
   .hero__title {
     font-size: 2rem;
   }
@@ -99,6 +176,7 @@
     font-size: 1.75rem;
   }
 
+  /* Skills Section */
   .skill-card {
     padding: 1.5rem 0.75rem;
   }
@@ -107,11 +185,29 @@
     font-size: 2.5rem;
   }
 
+  /* Project Cards */
   .project-card__content {
     padding: 1rem;
   }
 
+  /* Contact Section */
   .contact__form-wrapper {
     padding: 1.5rem;
+  }
+}
+
+/* Accessibility - Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  #hero-bg {
+    display: none !important;
+  }
+
+  /* Disable all animations for users who prefer reduced motion */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

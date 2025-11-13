@@ -626,25 +626,7 @@ body::before {
   }
 }
 
-/* Mobile Responsiveness */
-@media (max-width: 768px) {
-  .skill-card {
-    flex: 0 0 120px;
-    padding: 1rem 0.75rem;
-  }
 
-  .skills__track {
-    gap: 1rem;
-  }
-
-  .skill-card__icon {
-    font-size: 2rem;
-  }
-
-  .skill-card__title {
-    font-size: 0.9rem;
-  }
-}
 
 /* ===== PROJECTS SECTION ===== */
 .projects {
@@ -944,40 +926,6 @@ body::before {
   object-fit: contain;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .project-card__content {
-    padding: 1.5rem;
-  }
-
-  .project-card__title {
-    font-size: 1.2rem;
-  }
-
-  .project-card__description {
-    font-size: 0.9rem;
-    -webkit-line-clamp: 3;
-    line-clamp: 3;
-  }
-
-  .project-card__buttons {
-    flex-direction: column;
-  }
-
-  .project-card__buttons .btn {
-    width: 100%;
-  }
-}
-
-@media (max-width: 576px) {
-  .project-card__image {
-    padding-top: 60%;
-  }
-
-  .project-card__content {
-    padding: 1.25rem;
-  }
-}
 
 /* Loading skeleton animation (optional enhancement) */
 @keyframes shimmer {
@@ -1204,11 +1152,10 @@ body::before {
   font-size: 0.875rem;
 }
 
-/* ===== SCROLL ANIMATIONS ===== */
 .fade-in {
   opacity: 0;
-  transform: translateY(50px);
-  transition: var(--transition-smooth);
+  transform: translateY(30px); /* Reduced from 50px */
+  transition: opacity 0.4s ease-out, transform 0.4s ease-out; /* Faster - was 0.8s */
 }
 
 .fade-in.visible {
@@ -1218,8 +1165,8 @@ body::before {
 
 .slide-in-left {
   opacity: 0;
-  transform: translateX(-100px);
-  transition: var(--transition-smooth);
+  transform: translateX(-50px); /* Reduced from -100px */
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out; /* Faster - was 0.8s */
 }
 
 .slide-in-left.visible {
@@ -1229,8 +1176,8 @@ body::before {
 
 .slide-in-right {
   opacity: 0;
-  transform: translateX(100px);
-  transition: var(--transition-smooth);
+  transform: translateX(50px); /* Reduced from 100px */
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out; /* Faster - was 0.8s */
 }
 
 .slide-in-right.visible {
@@ -1240,8 +1187,8 @@ body::before {
 
 .scale-in {
   opacity: 0;
-  transform: scale(0.8);
-  transition: var(--transition-bounce);
+  transform: scale(0.9); /* Less dramatic - was 0.8 */
+  transition: opacity 0.4s ease-out, transform 0.4s ease-out; /* Much faster - was 0.6s bounce */
 }
 
 .scale-in.visible {
@@ -1251,13 +1198,30 @@ body::before {
 
 .rotate-in {
   opacity: 0;
-  transform: rotate(-10deg) scale(0.9);
-  transition: var(--transition-bounce);
+  transform: rotate(-5deg) scale(0.95); /* Less dramatic - was -10deg and 0.9 */
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out; /* Faster and smoother - was 0.6s bounce */
 }
 
 .rotate-in.visible {
   opacity: 1;
   transform: rotate(0deg) scale(1);
+}
+
+/* ===== OPTIONAL: ADD SMOOTH WILL-CHANGE FOR BETTER PERFORMANCE ===== */
+.fade-in,
+.slide-in-left,
+.slide-in-right,
+.scale-in,
+.rotate-in {
+  will-change: opacity, transform;
+}
+
+.fade-in.visible,
+.slide-in-left.visible,
+.slide-in-right.visible,
+.scale-in.visible,
+.rotate-in.visible {
+  will-change: auto;
 }
 
 /* ===== NOTIFICATION STYLES ===== */
@@ -1332,19 +1296,6 @@ body::before {
   will-change: width;
 }
 
-@media (max-width: 767px) {
-  #scroll-progress-top {
-    height: 3px;
-  }
-
-  .scroll-progress-bar {
-    border-radius: 0 1.5px 1.5px 0;
-  }
-
-  .hero__image-wrapper {
-    margin-bottom: 2.5rem;
-  }
-}
 
 #hero-bg {
   position: fixed;
@@ -1357,8 +1308,3 @@ body::before {
   display: block;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  #hero-bg {
-    display: none !important;
-  }
-}

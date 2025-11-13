@@ -169,92 +169,98 @@ function updateActiveNavLink() {
     });
 }
 
-// ===== SCROLL ANIMATIONS =====
+// ===== SCROLL ANIMATIONS ===== 
+
 function initializeScrollAnimations() {
     const observerOptions = {
-        threshold: 0.15,
-        rootMargin: '0px 0px -80px 0px'
+        threshold: 0.05, // Trigger earlier (was 0.15)
+        rootMargin: '0px 0px -50px 0px' // Reduced margin for faster trigger
     };
 
     const observer = new IntersectionObserver(function (entries) {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
+                // Immediate animation without delay
+                entry.target.classList.add('visible');
+
+                // Special handling for skill cards with minimal stagger
                 if (entry.target.classList.contains('skill-card')) {
-                    // Add visible class with staggered delay
-                    setTimeout(() => {
-                        entry.target.classList.add('visible');
-                    }, 100); // Base delay for first card
-                } else {
-                    entry.target.classList.add('visible');
+                    const cards = document.querySelectorAll('.skill-card');
+                    const index = Array.from(cards).indexOf(entry.target);
+                    entry.target.style.transitionDelay = `${index * 0.05}s`; // Faster stagger
                 }
             }
         });
     }, observerOptions);
 
-    // Hero content animations
+    // Hero content animations - instant
     const heroContent = document.querySelector('.hero__content');
     const heroImage = document.querySelector('.hero__image-wrapper');
     if (heroContent) {
         heroContent.classList.add('slide-in-left');
+        heroContent.style.transitionDelay = '0s';
         observer.observe(heroContent);
     }
     if (heroImage) {
         heroImage.classList.add('slide-in-right');
+        heroImage.style.transitionDelay = '0.1s';
         observer.observe(heroImage);
     }
 
-    // Section titles
+    // Section titles - faster appearance
     const sectionTitles = document.querySelectorAll('.section__title');
     sectionTitles.forEach((title, index) => {
         title.classList.add('fade-in');
-        title.style.transitionDelay = `${index * 0.1}s`;
+        title.style.transitionDelay = `${index * 0.05}s`; // Reduced from 0.1s
         observer.observe(title);
     });
 
-    // Skill cards with staggered animation
+    // Skill cards with faster staggered animation
     const skillCards = document.querySelectorAll('.skill-card');
     skillCards.forEach((card, index) => {
         card.classList.add('scale-in');
-        card.style.transitionDelay = `${index * 0.1}s`;
+        card.style.transitionDelay = `${index * 0.05}s`; // Reduced from 0.1s
         observer.observe(card);
     });
 
-    // Project filter buttons
+    // Project filter buttons - instant
     const filterButtons = document.querySelector('.projects__filters');
     if (filterButtons) {
         filterButtons.classList.add('fade-in');
+        filterButtons.style.transitionDelay = '0s';
         observer.observe(filterButtons);
     }
 
-    // Project cards with staggered animation
+    // Project cards with faster staggered animation
     const projectCards = document.querySelectorAll('.project-card');
     projectCards.forEach((card, index) => {
         card.classList.add('rotate-in');
-        card.style.transitionDelay = `${index * 0.15}s`;
+        card.style.transitionDelay = `${index * 0.08}s`; // Reduced from 0.15s
         observer.observe(card);
     });
 
-    // Contact form and info
+    // Contact form and info - faster
     const contactForm = document.querySelector('.contact__form-wrapper');
     const contactInfo = document.querySelector('.contact__info');
     if (contactForm) {
         contactForm.classList.add('slide-in-left');
+        contactForm.style.transitionDelay = '0s';
         observer.observe(contactForm);
     }
     if (contactInfo) {
         contactInfo.classList.add('slide-in-right');
+        contactInfo.style.transitionDelay = '0.05s';
         observer.observe(contactInfo);
     }
 
-    // Footer sections
+    // Footer sections - faster
     const footerSections = document.querySelectorAll('.footer__section');
     footerSections.forEach((section, index) => {
         section.classList.add('fade-in');
-        section.style.transitionDelay = `${index * 0.2}s`;
+        section.style.transitionDelay = `${index * 0.08}s`; // Reduced from 0.2s
         observer.observe(section);
     });
 }
-
 // ===== PROJECT FILTERING =====
 function initializeProjectFiltering() {
     const filterButtons = document.querySelectorAll('.projects__filter');
